@@ -1,7 +1,0 @@
-python-telegram-bot==20.7
-gdown
-python-dotenv
-python-telegram-bot
-moviepy
-pydub
-requests
