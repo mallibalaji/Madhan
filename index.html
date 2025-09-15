@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lemon Pickles Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+</head>
+
+<body onload="renderShop()">
+<nav class="navbar navbar-expand-lg navbar-light bg-warning-subtle border-bottom">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-warning-emphasis" href="#">Lemon Pickles</a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="admin.html"><b>Admin</b></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="navbar navbar-expand-lg navbar-light bg-warning-subtle border-bottom"  > <ul class="navbar-nav justify-content-center w-100" >
+  <li class="nav-item"><a class="nav-link" href="#products" style="color: rgb(109, 89, 50);"><b>Products</b></a></li>
+  <li class="nav-item"><a class="nav-link" href="#contact" style="color: rgb(109, 89, 50);"><b>Contact</b></a></li>
+  <li class="nav-item"><a class="nav-link" href="#products" style="color: rgb(109, 89, 50);"><b>Instagram</b></a></li>
+  <li class="nav-item"><a class="nav-link" href="#contact" style="color: rgb(109, 89, 50);"><b>Facebook</b></a></li>
+</ul>
+</div>
+
+<header class="py-5 bg-warning text-dark">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-md-7">
+        <h1 class="display-5 mb-3">Homemade Lemon Pickles</h1>
+        <p class="lead mb-0">Small-batch, preservative-free, and bursting with zesty flavor.</p>
+      </div>
+      <div class="col-md-5 text-md-end">
+        <img src="https://picsum.photos/seed/lemonHero/560/280" class="img-fluid rounded shadow" alt="Lemon Pickles">
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 mb-0" id="products">Products</h2>
+      <div class="input-group w-auto">
+        <input id="search" type="text" class="form-control" placeholder="Search products" oninput="renderShop()">
+      </div>
+    </div>
+    <div id="productGrid" class="row g-4"></div>
+  </div>
+</main>
+
+<footer class="bg-dark text-light py-4 mt-auto">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-md">
+        <h5 class="mb-2" >Contact</h5>
+        <p class="mb-1">Owner: Lemon Delights</p>
+        <p class="mb-1">Phone: +91-98765-43210</p>
+        <p class="mb-0">Email: hello@lemondelights.in</p>
+      </div>
+      <div class="col-md">
+        <h5 class="mb-2" id="contact">Address</h5>
+        <p class="mb-0">12 Citrus Street, Pune, Maharashtra 411001</p>
+      </div>
+      <div class="col-md text-md-end">
+        <p class="mb-0">© 2025 Lemon Delights</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Shared store -->
+<script src="app.js"></script>
+<script>
+
+
+
+function submitOrder() {
+  const name = document.getElementById("custName").value.trim();
+  const mobile = document.getElementById("custMobile").value.trim();
+  const address = document.getElementById("custAddress").value.trim();
+  const qty = document.getElementById("custQty").value.trim();
+
+  if (!name || !mobile || !address || !qty) {
+    alert("Please fill all details!");
+    return;
+  }
+
+  const subject = encodeURIComponent(`Order Request: ${selectedProduct}`);
+  const body = encodeURIComponent(
+    `Hello,\n\nI would like to place an order:\n\n` +
+    `Product: ${selectedProduct}\n` +
+    `Price per unit: ₹${selectedPrice}\n` +
+    `Quantity: ${qty}\n\n` +
+    `Customer Details:\nName: ${name}\nMobile: ${mobile}\nAddress: ${address}\n\nThank you.`
+  );
+
+  window.location.href = `mailto:hello@lemondelights.in?subject=${subject}&body=${body}`;
+}
+
+
+function renderShop() {
+  LemonStore.initDefaults();
+  const q = (document.getElementById('search')?.value || '').toLowerCase().trim();
+  let products = LemonStore.getProducts();
+  if (q) products = products.filter(p => (p.name + ' ' + p.description).toLowerCase().includes(q));
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = products.map(p => {
+    const badge = p.available ? '<span class="badge bg-success">In stock</span>' : '<span class="badge bg-secondary">Unavailable</span>';
+    const disabled = p.available ? '' : 'disabled';
+    return `
+    <div class="col-12 col-sm-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <img src="${p.image}" class="card-img-top" alt="${p.name}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title d-flex justify-content-between align-items-center">
+            <span>${p.name}</span>
+            ${badge}
+          </h5>
+          <p class="card-text small flex-grow-1">${p.description}</p>
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <span class="fw-semibold">₹ ${p.price}</span>
+          <button class="btn btn-warning btn-sm" ${disabled}
+  onclick="openOrderModal('${p.name.replace(/'/g, "\\'")}', ${p.price})">
+  Order
+</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+let selectedProduct = "";
+let selectedPrice = "";
+
+function openOrderModal(productName, price) {
+  selectedProduct = productName;
+  selectedPrice = price;
+
+  // fill hidden fields and reset some inputs
+  document.getElementById("orderProduct").value = productName;
+  document.getElementById("orderPrice").value = price;
+  document.getElementById("custQty").value = 1;
+  document.getElementById("custName").value = '';
+  document.getElementById("custMobile").value = '';
+  document.getElementById("custAddress").value = '';
+
+  // show modal
+  new bootstrap.Modal(document.getElementById('orderModal')).show();
+}
+
+</script>
+
+<!-- Order Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Place Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="orderForm" action="https://formspree.io/f/mandzdbv" method="POST">
+          <!-- Hidden product info filled by JS -->
+          <input type="hidden" id="orderProduct" name="product" value="">
+          <input type="hidden" id="orderPrice" name="price" value="">
+
+          <div class="mb-3">
+            <label class="form-label">Quantity</label>
+            <input type="number" id="custQty" name="quantity" class="form-control" min="1" value="1" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input type="text" id="custName" name="name" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" id="custMobile" name="mobile" class="form-control" pattern="[0-9]{10}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea id="custAddress" name="address" class="form-control" rows="3" required></textarea>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-warning">Order Now</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+
+</body>
+</html>

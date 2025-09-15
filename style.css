@@ -1,0 +1,7 @@
+/* Minor tweaks */
+html { scroll-behavior: smooth; }
+#home, #products { scroll-margin-top: 80px; }
+
+.card-img-top { object-fit: cover; height: 220px; }
+footer p, footer h5 { margin-bottom: .5rem; }
+
