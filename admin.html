@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Panel - Lemon Sales</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Admin - Manage Lemon Products</h2>
+        <form id="addProductForm" class="mb-3">
+            <input type="text" class="form-control mb-2" id="name" placeholder="Product Name" required />
+            <input type="number" class="form-control mb-2" id="price" placeholder="Price" required />
+            <input type="text" class="form-control mb-2" id="image" placeholder="Image URL" required />
+            <textarea class="form-control mb-2" id="desc" placeholder="Description"></textarea>
+            <select class="form-control mb-2" id="status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+            <button type="submit" class="btn btn-success">Add Product</button>
+        </form>
+        <h4>Product List</h4>
+        <table class="table table-bordered" id="productTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <a href="index.html" class="btn btn-primary mt-3">Back to Store</a>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>
